@@ -1,0 +1,36 @@
+package com.example.demo.service;
+
+import com.example.demo.dto.UserRequestDTO;
+import com.example.demo.dto.UserResponseDTO;
+import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Override
+    public UserResponseDTO createUser(UserRequestDTO request) {
+
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+
+        User saved = userRepository.save(user);
+
+        UserResponseDTO dto = new UserResponseDTO();
+        dto.setId(saved.getId());
+        dto.setName(saved.getName());
+        dto.setEmail(saved.getEmail());
+
+        return dto;
+    }
+}

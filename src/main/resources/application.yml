@@ -3,4 +3,4 @@ spring:
     name: demo
 
   mongodb:
-    uri: mongodb+srv://arnav:arnav2006@cluster0.08eh0ve.mongodb.net/tododb?retryWrites=true&w=majority&appName=Cluster0
+      uri: mongodb+srv://arnav:arnav%232006@cluster0.z2gmxzf.mongodb.net/tododb?retryWrites=true&w=majority

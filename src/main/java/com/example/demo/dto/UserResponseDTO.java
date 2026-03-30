@@ -1,18 +1,16 @@
 package com.example.demo.dto;
 
-import java.time.Instant;
-
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Data
-@Builder
+@NoArgsConstructor  
+@AllArgsConstructor
 public class UserResponseDTO {
 
     private String id;
     private String name;
     private String email;
-    private Instant createdAt;
-    
-
+    private String password;
 }

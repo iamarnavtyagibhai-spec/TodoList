@@ -1,13 +1,15 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.*;
 import java.util.List;
 
-import com.example.demo.dto.TaskRequestDTO;
-import com.example.demo.dto.TaskResponseDTO;
-
 public interface TaskService {
-    TaskResponseDTO createTask(TaskRequestDTO request);
-    List<TaskResponseDTO> getAllTasks();
-    TaskResponseDTO markCompleted(String id);
-    void deleteTask(String id);
+
+    TaskResponseDTO create(String listId, TaskRequestDTO request);
+
+    List<TaskResponseDTO> getByList(String listId);
+
+    List<TaskResponseDTO> search(String keyword);
+
+    TaskResponseDTO markComplete(String taskId);
 }

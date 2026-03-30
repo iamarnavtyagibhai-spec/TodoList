@@ -1,18 +1,15 @@
 package com.example.demo.dto;
-
-
-import java.time.LocalDate;
+import java.time.Instant;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class TaskRequestDTO {
+@NoArgsConstructor
+public class TodoListResponseDTO {
+    private String id;
     private String title;
-    private String description;
-    private LocalDate dueDate;
-   
+    private Instant createdAt;
 }

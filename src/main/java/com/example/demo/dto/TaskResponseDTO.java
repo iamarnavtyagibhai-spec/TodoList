@@ -17,6 +17,6 @@ public class TaskResponseDTO {
     private String title;
     private String description;
     private LocalDate dueDate;
-    private Boolean isCompleted;
+    private boolean Completed;
     private Instant createdAt;
 }

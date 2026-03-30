@@ -1,62 +1,84 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.TaskRequestDTO;
-import com.example.demo.dto.TaskResponseDTO;
+import com.example.demo.dto.*;
 import com.example.demo.model.Task;
 import com.example.demo.repository.TaskRepository;
-import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
 
-    private final TaskRepository taskRepository;
+    @Autowired
+    private TaskRepository repo;
 
+    // ================= CREATE TASK =================
     @Override
-    public TaskResponseDTO createTask(TaskRequestDTO request) {
+    public TaskResponseDTO create(String listId, TaskRequestDTO request) {
 
         Task task = new Task();
+
+        task.setTodoListId(listId);
         task.setTitle(request.getTitle());
         task.setDescription(request.getDescription());
         task.setDueDate(request.getDueDate());
+        task.setCompleted(false);
+        task.setCreatedAt(Instant.now());
 
-        Task saved = taskRepository.save(task);
+        Task savedTask = repo.save(task);
 
-        return mapToDTO(saved);
+        return map(savedTask);
     }
 
+    // ================= GET TASKS BY LIST =================
     @Override
-    public List<TaskResponseDTO> getAllTasks() {
-        return taskRepository.findAll()
+    public List<TaskResponseDTO> getByList(String listId) {
+
+        return repo.findByTodoListId(listId)
                 .stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
+                .map(n -> map(n))   // using lambda
+                .toList();
     }
 
+    // ================= SEARCH TASK =================
     @Override
-    public TaskResponseDTO markCompleted(String id) {
-        Task task = taskRepository.findById(id).orElseThrow();
-        task.setIsCompleted(true);
-        return mapToDTO(taskRepository.save(task));
+    public List<TaskResponseDTO> search(String keyword) {
+
+        return repo.findByTitleContainingIgnoreCase(keyword)
+                .stream()
+                .map(n -> map(n))   // using lambda
+                .toList();
     }
 
+    // ================= MARK COMPLETE =================
     @Override
-    public void deleteTask(String id) {
-        taskRepository.deleteById(id);
+    public TaskResponseDTO markComplete(String taskId) {
+
+        Task task = repo.findById(taskId).orElseThrow();
+
+        task.setCompleted(true);
+
+        Task updatedTask = repo.save(task);
+
+        return map(updatedTask);
     }
 
-    private TaskResponseDTO mapToDTO(Task task) {
-        return TaskResponseDTO.builder()
-                .id(task.getId())
-                .title(task.getTitle())
-                .description(task.getDescription())
-                .dueDate(task.getDueDate())
-                .isCompleted(task.getIsCompleted())
-                .createdAt(task.getCreatedAt())
-                .build();
+    // ================= MAP FUNCTION =================
+    private TaskResponseDTO map(Task t) {
+
+        TaskResponseDTO dto = new TaskResponseDTO();
+
+        dto.setId(t.getId());
+        dto.setTitle(t.getTitle());
+        dto.setDescription(t.getDescription());
+        dto.setCompleted(t.isCompleted());
+        dto.setCreatedAt(t.getCreatedAt());
+        dto.setDueDate(t.getDueDate());
+
+        return dto;
     }
 }

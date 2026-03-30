@@ -1,60 +1,69 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.example.demo.dto.TaskRequestDTO;
 import com.example.demo.dto.TaskResponseDTO;
-import com.example.demo.response.ApiResponse;
 import com.example.demo.service.TaskService;
+import com.example.demo.response.ApiResponse;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
-@RequiredArgsConstructor
 public class TaskController {
 
     private final TaskService taskService;
 
-    @PostMapping
-    public ApiResponse<TaskResponseDTO> createTask(@RequestBody TaskRequestDTO request) {
-        return new ApiResponse<>(
-                true,
-                taskService.createTask(request),
-                "Task created successfully"
-        );
+    // Constructor Injection ✅
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
     }
 
-    @GetMapping
-    public ApiResponse<List<TaskResponseDTO>> getAllTasks() {
-        return new ApiResponse<>(
-                true,
-                taskService.getAllTasks(),
-                null
-        );
+    // ================= CREATE =================
+    @PostMapping("/{listId}")
+    public ResponseEntity<ApiResponse<TaskResponseDTO>> createTask(
+            @PathVariable String listId,
+            @RequestBody TaskRequestDTO request) {
+
+        TaskResponseDTO response = taskService.create(listId, request);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(true, response, "Task created successfully"));
     }
 
-    @PutMapping("/{id}/complete")
-    public ApiResponse<TaskResponseDTO> complete(@PathVariable String id) {
-        return new ApiResponse<>(
-                true,
-                taskService.markCompleted(id),
-                "Task marked completed"
-        );
+    // ================= GET TASKS BY LIST =================
+    @GetMapping("/list/{listId}")
+    public ResponseEntity<ApiResponse<List<TaskResponseDTO>>> getTasksByList(
+            @PathVariable String listId) {
+
+        List<TaskResponseDTO> response = taskService.getByList(listId);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(true, response, "Tasks fetched successfully"));
     }
 
-    @DeleteMapping("/{id}")
-    public ApiResponse<Void> delete(@PathVariable String id) {
-        taskService.deleteTask(id);
-        return new ApiResponse<>(true, null, "Task deleted");
+    // ================= SEARCH TASK =================
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<TaskResponseDTO>>> searchTask(
+            @RequestParam String keyword) {
+
+        List<TaskResponseDTO> response = taskService.search(keyword);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(true, response, "Search results"));
+    }
+
+    // ================= MARK COMPLETE =================
+    @PutMapping("/complete/{taskId}")
+    public ResponseEntity<ApiResponse<TaskResponseDTO>> completeTask(
+            @PathVariable String taskId) {
+
+        TaskResponseDTO response = taskService.markComplete(taskId);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(true, response, "Task marked as complete"));
     }
 }

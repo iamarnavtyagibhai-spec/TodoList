@@ -66,4 +66,16 @@ public class TaskController {
         return ResponseEntity.ok(
                 new ApiResponse<>(true, response, "Task marked as complete"));
     }
+
+    //delete
+
+    @DeleteMapping("/{taskId}")
+    public ResponseEntity<ApiResponse<Void>> deleteTask(
+        @PathVariable String taskId) {
+
+    taskService.delete(taskId);
+
+    return ResponseEntity.ok(
+            new ApiResponse<>(true, null, "Task deleted successfully"));
+}
 }

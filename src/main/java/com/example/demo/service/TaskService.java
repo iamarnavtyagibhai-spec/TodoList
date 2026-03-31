@@ -12,4 +12,5 @@ public interface TaskService {
     List<TaskResponseDTO> search(String keyword);
 
     TaskResponseDTO markComplete(String taskId);
+    public void delete(String taskId);
 }

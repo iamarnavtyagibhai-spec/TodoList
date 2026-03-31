@@ -81,4 +81,10 @@ public class TaskServiceImpl implements TaskService {
 
         return dto;
     }
+
+
+    @Override
+    public void delete(String taskId) {
+    repo.deleteById(taskId);  // this removes data from DB
+}
 }

@@ -2,8 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.TodoListRequestDTO;
 import com.example.demo.dto.TodoListResponseDTO;
-import com.example.demo.service.TodoListService;
 import com.example.demo.response.ApiResponse;
+import com.example.demo.service.TodoListService;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +15,11 @@ import java.util.List;
 @RequestMapping("/api/todolists")
 public class TodoListController {
 
-    private final TodoListService todoListService;
+    private final TodoListService service;
 
     // Constructor Injection ✅
-    public TodoListController(TodoListService todoListService) {
-        this.todoListService = todoListService;
+    public TodoListController(TodoListService service) {
+        this.service = service;
     }
 
     // ================= CREATE =================
@@ -27,7 +27,7 @@ public class TodoListController {
     public ResponseEntity<ApiResponse<TodoListResponseDTO>> create(
             @RequestBody TodoListRequestDTO request) {
 
-        TodoListResponseDTO response = todoListService.create(request);
+        TodoListResponseDTO response = service.create(request);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>(true, response, "Todo list created successfully"));
@@ -37,7 +37,7 @@ public class TodoListController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<TodoListResponseDTO>>> getAll() {
 
-        List<TodoListResponseDTO> response = todoListService.getAll();
+        List<TodoListResponseDTO> response = service.getAll();
 
         return ResponseEntity.ok(
                 new ApiResponse<>(true, response, "Todo lists fetched successfully"));
@@ -48,17 +48,30 @@ public class TodoListController {
     public ResponseEntity<ApiResponse<TodoListResponseDTO>> getById(
             @PathVariable String id) {
 
-        TodoListResponseDTO response = todoListService.getById(id);
+        TodoListResponseDTO response = service.getById(id);
 
         return ResponseEntity.ok(
                 new ApiResponse<>(true, response, "Todo list fetched successfully"));
     }
 
+    // ================= UPDATE =================
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<TodoListResponseDTO>> update(
+            @PathVariable String id,
+            @RequestBody TodoListRequestDTO request) {
+
+        TodoListResponseDTO response = service.update(id, request);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(true, response, "Todo list updated successfully"));
+    }
+
     // ================= DELETE =================
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable String id) {
+    public ResponseEntity<ApiResponse<Void>> delete(
+            @PathVariable String id) {
 
-        todoListService.delete(id);
+        service.delete(id);
 
         return ResponseEntity.ok(
                 new ApiResponse<>(true, null, "Todo list deleted successfully"));

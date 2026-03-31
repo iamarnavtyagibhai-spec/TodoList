@@ -67,4 +67,20 @@ public class TodoListServiceImpl implements TodoListService {
 
         return dto;
     }
+    @Override
+    public TodoListResponseDTO update(String id, TodoListRequestDTO request) {
+
+    TodoList list = repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("TodoList not found"));
+
+    list.setTitle(request.getTitle());
+
+    TodoList updated = repository.save(list);
+
+    TodoListResponseDTO dto = new TodoListResponseDTO();
+    dto.setId(updated.getId());
+    dto.setTitle(updated.getTitle());
+
+    return dto;
+}
 }

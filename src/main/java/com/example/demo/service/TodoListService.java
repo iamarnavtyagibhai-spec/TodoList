@@ -9,6 +9,7 @@ public interface TodoListService {
 
     // CREATE
     TodoListResponseDTO create(TodoListRequestDTO request);
+    TodoListResponseDTO update(String id, TodoListRequestDTO request);
 
     // GET ALL
     List<TodoListResponseDTO> getAll();

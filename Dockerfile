@@ -1,14 +1,19 @@
-# Use Java base image
-FROM eclipse-temurin:17-jdk-alpine
+# Use Maven + Java
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 
-# Set working directory
+WORKDIR /app
+COPY . .
+
+# Build the project
+RUN mvn clean package -DskipTests
+
+# Run stage
+FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 
-# Copy jar file into container
-COPY target/demo-0.0.1-SNAPSHOT.jar app.jar
+# Copy jar from build stage
+COPY --from=build /app/target/*.jar app.jar
 
-# Expose port
 EXPOSE 8080
 
-# Run application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+CMD ["java", "-jar", "app.jar"]

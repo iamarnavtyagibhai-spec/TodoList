@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: todolist
+
+  mongodb:
+      uri: mongodb+srv://arnav:arnav%232006@cluster0.z2gmxzf.mongodb.net/tododb?retryWrites=true&w=majority

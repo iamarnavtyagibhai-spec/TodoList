@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.todolist.model.TodoList;
 import com.example.todolist.response.ApiResponse;
 import com.example.todolist.service.*;
+import com.example.todolist.dto.*;
 
 @RestController
 @RequestMapping("/lists")
@@ -50,4 +51,22 @@ public class TodoListController {
 
         return new ApiResponse<>(true, lists, "Lists by date fetched");
     }
+    @PutMapping("/{id}")
+    public ApiResponse<TodoList> update(
+        @PathVariable String id,
+        @RequestBody UpdateTodoRequest request,
+        Principal principal) {
+
+    String email = principal.getName();
+
+    TodoList updated = service.changeName(email,id,request.getTitle());
+
+    return new ApiResponse<>(
+            true,
+            updated,
+            "TodoList updated successfully"
+    );
+}
+
+
 }

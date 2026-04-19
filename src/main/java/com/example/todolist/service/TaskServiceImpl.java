@@ -58,4 +58,16 @@ public class TaskServiceImpl implements TaskService {
 
         repo.deleteById(taskId);
     }
+
+    @Override
+    public Task update(String taskId,String newTitle, String email){
+      Task task = repo.findById(taskId)
+        .orElseThrow(() -> new RuntimeException("Task not found"));
+           if (!task.getUserEmail().equals(email)) {
+            throw new RuntimeException("Unauthorized");
+        }
+        task.setTitle(newTitle);
+        return repo.save(task);
+
+    }
 }

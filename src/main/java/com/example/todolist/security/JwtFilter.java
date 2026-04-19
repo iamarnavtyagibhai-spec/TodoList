@@ -28,7 +28,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String header = request.getHeader("Authorization");
         String path = request.getServletPath();
-
         // ✅ allow login/register
         if (path.startsWith("/users")) {
             filterChain.doFilter(request, response);

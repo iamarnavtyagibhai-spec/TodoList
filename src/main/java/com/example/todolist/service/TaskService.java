@@ -13,4 +13,6 @@ public interface TaskService {
     Task toggle(String taskId, String email);
 
     void delete(String taskId, String email);
+    Task update(String taskId,String newTitle, String email);
+ 
 }

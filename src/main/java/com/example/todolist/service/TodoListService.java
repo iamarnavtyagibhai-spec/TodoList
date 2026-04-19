@@ -11,4 +11,6 @@ public interface TodoListService {
     List<TodoList> getByUser(String email);
 
     List<TodoList> getByUserAndDate(String email, String date);
+    
+    TodoList changeName(String email, String id, String newTitle);
 }

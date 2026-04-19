@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.todolist.model.Task;
 import com.example.todolist.response.ApiResponse;
 import com.example.todolist.service.TaskService;
+import com.example.todolist.dto.*;
 
 @RestController
 @RequestMapping("/tasks")
@@ -24,7 +25,6 @@ public class TaskController {
     @Autowired
     private TaskService service;
 
-    // ✅ Create Task
     @PostMapping
     public ApiResponse<Task> create(@RequestBody Task task, Principal principal) {
 
@@ -86,4 +86,22 @@ public class TaskController {
                 "Task deleted successfully"
         );
     }
+
+
+    @PutMapping("/{taskId}")
+    public ApiResponse<Task> update(
+        @PathVariable String taskId,
+        @RequestBody UpdateTaskRequest request,
+        Principal principal) {
+
+    String email = principal.getName();
+
+    Task updated = service.update(taskId, request.getTitle(), email);
+
+    return new ApiResponse<>(
+            true,
+            updated,
+            "Task updated successfully"
+    );
+}
 }
